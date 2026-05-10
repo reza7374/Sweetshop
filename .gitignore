@@ -1,2 +1,3 @@
 *.pyc
 sweetshop/__pycache__
+db.sqlite3
