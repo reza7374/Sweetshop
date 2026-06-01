@@ -1,24 +1,25 @@
 from django.db import models
+from django.db.models import Q
 
-# Create your models here.
 class Category(models.Model):
-    name = models.CharField(max_length=150,unique=True)
-    slug = models.SlugField(max_length=160,unique=True)
-    descritption = models.TextField(blank=True)
+    name = models.CharField(max_length=150, unique=True)
+    slug = models.SlugField(max_length=160, unique=True)
+    description = models.TextField(blank=True)
 
     class Meta:
         ordering = ["name"]
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
-    
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+
     def __str__(self):
         return self.name
+
 
 class Product(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
-        related_name='products'
+        related_name="products",
     )
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True)
@@ -30,26 +31,34 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at']
-        verbose_name = 'Product'
-        verbose_name_plural = 'Products'
+        ordering = ["-created_at"]
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
 
     def __str__(self):
         return self.name
 
+
 class ProductImage(models.Model):
     product = models.ForeignKey(
         Product,
-        on_delete=models.PROTECT,
-        related_name='images'
+        on_delete=models.CASCADE,
+        related_name="images",
     )
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to="products/")
     alt_text = models.CharField(max_length=255, blank=True)
     is_primary = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = 'Product Image'
-        verbose_name_plural = 'Product Images'
+        verbose_name = "Product Image"
+        verbose_name_plural = "Product Images"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product"],
+                condition=Q(is_primary=True),
+                name="unique_primary_image_per_product",
+            )
+        ]
 
     def __str__(self):
         return f"Image for {self.product.name}"

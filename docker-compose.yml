@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: sweetshop_db
+    environment:
+      POSTGRES_DB: sweetshop_db
+      POSTGRES_USER: sweetshop_user
+      POSTGRES_PASSWORD: sweetshop_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - sweetshop_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  sweetshop_pgdata:
