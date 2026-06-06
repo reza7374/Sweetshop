@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     "django_filters",
-    "corsheaders"
+    "corsheaders",
     
     # Local apps
     'users',
@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'payments',
 
 ]
+
+AUTH_USER_MODEL = "users.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
